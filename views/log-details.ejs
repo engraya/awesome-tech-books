@@ -1,0 +1,202 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Event Logger</title>
+
+    <!-- CSS FILES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&family=Sono:wght@200;300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="/css/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+
+    <link rel="stylesheet" href="/css/owl.theme.default.min.css">
+
+    <link href="/css/templatemo-pod-talk.css" rel="stylesheet">
+    <!--
+
+TemplateMo 584 Pod Talk
+
+https://templatemo.com/tm-584-pod-talk
+
+-->
+</head>
+
+<%- include('./partials/head') %>
+
+<body>
+
+    <main>
+
+
+        <%- include('./partials/navbar') %>
+
+
+        <header class="site-header d-flex flex-column justify-content-center align-items-center">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-12 col-12 text-center">
+
+                        <h2 class="mb-0">Log Details</h2>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+        <section class="" id="section_2">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-8 col-12 mx-auto">
+                        <div class="pb-5 mb-5">
+                            <div class="">
+                                <h4 class="d-flex flex-column justify-content-center align-items-center"><%= log.title %></h4>
+                            </div>
+                            <hr>
+                            
+                    <div class="col-lg-12 col-12 mb-lg-0">
+                        <div class="custom-block d-flex">
+                            <div class="">
+           
+
+                            </div>
+
+                            <div class="custom-block-info">
+                                <div class="custom-block-top d-flex mb-1">
+                                    <small class="me-4">
+                                        <i class="bi-clock-fill custom-icon"></i>
+                                        50 Minutes
+                                    </small>
+
+                                    <small>Episode <span class="badge">15</span></small>
+                                </div>
+
+                                <h5 class="mb-2">
+                                    <a href="detail-page.html">
+                                        <%= log.title %>
+                                    </a>
+                                </h5>
+
+                                <div class="profile-block d-flex">
+                                    <img src="/images/profile/avatar.svg"
+                                        class="profile-block-image img-fluid" alt="">
+
+                                    <p>
+                                        <%= log.author %>
+                                        <img src="/images/verified.png" class="verified-image img-fluid" alt="">
+                                        <strong><%= log.authorProfession %></strong>
+                                    </p>
+                                </div>
+
+                                <p class="mb-0">Lorem Ipsum dolor sit amet consectetur</p>
+
+                                <div class="custom-block-bottom d-flex justify-content-between mt-3">
+                                    <a href="#" class="bi-headphones me-1">
+                                        <span>120k</span>
+                                    </a>
+
+                                    <a href="#" class="bi-heart me-1">
+                                        <span>42.5k</span>
+                                    </a>
+
+                                    <a href="#" class="bi-chat me-1">
+                                        <span>11k</span>
+                                    </a>
+
+                                    <a href="#" class="bi-download">
+                                        <span>50k</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-column ms-auto">
+                                <a href="#" class="badge">
+                                    <i class="bi-heart"></i>
+                                </a>
+
+                                <a href="#" class="badge">
+                                    <i class="bi-bookmark"></i>
+                                </a>
+                                <a href="#" class="badge bg-success">
+                                    <i class="bi-pen"></i>
+                                </a>
+                                <a class="delete badge ms-auto bg-danger" data-doc="<%= log._id %>" id="deleteIcon">
+                                    <i class="bi-trash "></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container p-4 md-4">
+
+                        <div class="custom-block-info">
+                                                    
+                        <p><%= log.snippet %></p>
+
+                        </div>
+
+                        <div class="container">
+                        <p><%= log.body %></p>
+                        </div>
+                        <hr>
+
+                        <div class="custom-block-info">
+                            <p class="">Author : <%= log.author %> </p>
+                        </div>
+                        <div class="custom-block-info">
+                            <p class="">Author Profession : <%= log.authorProfession %> </h4>
+                        </div>
+                        <div class="custom-block-info">
+                            <p class="">Created at : <%= log.createdAt.toUTCString() %> </h4>
+                        </div>
+                        <div class="custom-block-info">
+                            <p class="">Updated at : <%= log.updatedAt.toUTCString() %> </h4>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <%- include('./partials/footer') %>
+
+    <script>
+        const deleteIcon = document.getElementById('deleteIcon');
+
+        deleteIcon.addEventListener('click', (e) => {
+            const endPoint = `/logs/${deleteIcon.dataset.doc}`;
+
+            fetch(endPoint, {
+                method: 'DELETE'
+            })
+            .then((response) => response.json())
+            .then((data) => window.location.href = data.redirect)
+            .catch((error) => {
+                console.log(error)
+            })
+        })
+    </script>
+
+    <!-- JAVASCRIPT FILES -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/custom.js"></script>
+
+</body>
+
+</html>
