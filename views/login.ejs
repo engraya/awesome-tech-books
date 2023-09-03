@@ -1,50 +1,13 @@
-<!doctype html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<%- include('./partials/auth_header') %>
 
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Register</title>
-
-    <!-- CSS FILES -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&family=Sono:wght@200;300;400;500;700&display=swap"
-        rel="stylesheet">
-
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-
-    <link rel="stylesheet" href="/css/bootstrap-icons.css">
-
-    <link rel="stylesheet" href="/css/owl.carousel.min.css">
-
-    <link rel="stylesheet" href="/css/owl.theme.default.min.css">
-
-    <link href="/css/templatemo-pod-talk.css" rel="stylesheet">
-    <!--
-
-TemplateMo 584 Pod Talk
-
-https://templatemo.com/tm-584-pod-talk
-
--->
-</head>
-
-<%- include('./partials/head') %>
 
 <body>
 
     <main>
 
 
-        <%- include('./partials/navbar') %>
+        <%- include('./partials/authnav') %>
 
 
         <header class="site-header d-flex flex-column justify-content-center align-items-center">
@@ -61,17 +24,20 @@ https://templatemo.com/tm-584-pod-talk
                 <div class="row">
                     <div class="col-md-12 justify-content-center align-items-center d-flex flex-column">
                                 <h4 class="col-lg-12 text-center">LOGIN</h4>
+                                <%- include('./partials/messages') %>
                                 <hr>
                                 <div class="subscribe-form-wrap">
                                     <form method="POST">
-                                        <label for="username">Username</label>
-                                        <input type="text" name="username" class="form-control"><br>
+                                        <label for="username">Email</label>
+                                        <input type="text" name="email" id="email" class="form-control" placeholder="Enter Email"><br>
                                         <label for="password1">Password</label>
-                                        <input type="password1" name="password1" class="form-control"><br>
+                                        <input type="password" name="password" id="password" class="form-control" placeholder="Enter Password"><br>
                                         <div class="col-lg-12 col-12">
                                             <button type="submit" class="form-control btn btn-success">Login</button>
                                         </div>
                                     </form>
+                                    <p class="lead mt-4">
+                                        No Account? <a href="register">Register</a>
                                 </div>
                         </div>
                     </div>
@@ -80,7 +46,7 @@ https://templatemo.com/tm-584-pod-talk
         </section>
     </main>
 
-    <%- include('./partials/footer') %>
+
 
     <!-- JAVASCRIPT FILES -->
     <script src="js/jquery.min.js"></script>

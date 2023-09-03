@@ -7,7 +7,46 @@ const userRoutes = require('./routes/users')
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session')
- 
+const passport = require('passport');
+const coreRoute = require('./routes/core');
+const usersRoute = require('./routes/users')
+const bodyParser = require('body-parser');
+
+
+// Passport Config
+require('./config/passport')(passport);
+
+// EJS
+app.set('view engine', 'ejs');
+
+app.use(express.static(path.join(__dirname,"public")));
+app.use(bodyParser.urlencoded({ extended : false }));
+
+
+// Express session
+app.use(
+    session({
+      secret: 'secret',
+      resave: true,
+      saveUninitialized: true
+    })
+  );
+  
+  // Passport middleware
+  app.use(passport.initialize());
+  app.use(passport.session());
+  
+  // Connect flash
+  app.use(flash());
+
+
+// Global variables
+app.use(function(req, res, next) {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    next();
+  });
 
 
 const dbURL = 'mongodb://localhost:27017/EventLoggerDatabase'
@@ -41,7 +80,7 @@ app.use('/users', userRoutes )
 
 // Routes
 app.get('/', (request, response) => {
-    response.render("index")
+    response.render("landingPage")
 })
 
 
@@ -61,24 +100,7 @@ app.use(session({
     cookie: { secure: true }
   }))
 
-  // express validator
 
-// app.use(expressValidator({
-//     errorFormatter : function(param, msg, value) {
-//         var namespace = param.split('.')
-//         , root = namespace.shift()
-//         , formParam = root;
-
-//         while(namespace.length) {
-//             formParam += '[' + namespace.shift() + ']'
-//         }
-//         return{
-//             param : formParam,
-//             msg : msg,
-//             value : value
-//         };
-//     }
-// }));
 
 app.use(expressValidator);
 
@@ -114,24 +136,6 @@ app.get('/register', (request, response) => {
     response.render("register")
 })
 
-
-// Adding Data to Database
-// app.get('/add-log', (request, response) => {
-//     const log = new Log({
-//         title: 'Cloud Servives',
-//         snippet: 'Virtual Machines and Containers',
-//         body: 'Making Changes the platform',
-//         author: 'muhsin',
-//         authorProfession: 'AWS Cloud Solutions Architect'
-//     })
-//     log.save()
-//         .then((result) => {
-//             response.send(result)
-//         })
-//         .catch((error) => {
-//             console.log(error)
-//         });
-// })
 
 
 const serverPort = process.env.PORT || 5000;

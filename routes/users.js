@@ -1,67 +1,114 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs')
+const passport = require('passport');
+const flash = require('connect-flash');
+// User Model
+const User = require('../models/User');
 
+const { forwardAuthenticated } = require('../config/authConfig');
 
-const User = require('../models/user');
-
-router.get('/register', (request, response) => {
+// Registration Page
+router.get('/register', forwardAuthenticated, (request, response) => {
     response.render('register')
 })
 
-
-router.post('/register', (request, response) => {
-    const name =  request.body.name
-    const username =  request.body.username
-    const email =  request.body.email
-    const password =  request.body.password
-    const password2=  request.body.password2
-
-    request.checkBody('Name', 'Name is Required').notEmpty()
-    request.checkBody('Username', 'Username is Required').notEmpty()
-    request.checkBody('Email', 'Email is Required').notEmpty()
-    request.checkBody('Password', 'Password is Required').notEmpty()
-    request.checkBody('Password2', 'Password Do not Match').equals(request.body.password1)
+// Login Page
+router.get('/login', forwardAuthenticated, (request, response) => {
+    response.render('login')
+})
 
 
-    let errors = request.validationErrors();
+// Register route
+router.post('/register', (request, response) =>{
+    const { name, email, password, password2 } = request.body
+    let errors = []
 
-    if(erors) {
-        response.render('register', { errors :errors })
-    } else {
-        let newUser = new User({
-            name:name,
-            username:username,
-            email:email,
-            password:password
-        });
+    let requiredFieldsErrorMesaage = { message : 'Please Fill in all the required Fields'}
+    let passwordMatchErrorMessage = { message : 'Passwords do not match'}
+    let passwordLengthErrorMessage = { message : 'Password Length Should be Greater than 5 Characters'}
+    let alreadyRegisteredEmailErrorMeesage = { message : 'Email already exist, try with another credential'}
 
-        bcrypt.getSalt(10, (error, salt) => {
-            bcrypt.hash(newUser.password, salt, (error, hash) => {
-                if(error) {
-                    console.log(error)
-                } else{
-                    newUser.password1 = hash;
-                    newUser.save((error) => {
-                        if(error) {
-                            console.log(error)
-                            return;
-                        } else {
-                            request.flash('Registration Successful', 'You are now Registered and can log into your Account!')
-                            response.redirect('/users/login')
-                        }
-                    })
-                }
-            })
-        })
+    // Check equired Fileds
+    if (!name || !email || !password || !password2) {
+        errors.push(requiredFieldsErrorMesaage)
     }
 
+    //Check for Password Match
+    if (password !== password2) {
+        errors.push(passwordMatchErrorMessage)
+    }
 
+    // Check for Password Length
+    if (password.length < 5) {
+        errors.push(passwordLengthErrorMessage)
+    }
 
+    if (errors.length > 0) {
+        let context = { errors, name, email, password, password2}
+        response.render('register', context)
+    }
+    else{
+        // Passed Validation
+        User.findOne({ email : email })
+            .then(user => {
+                if (user) {
+                //User already exist
+                errors.push(alreadyRegisteredEmailErrorMeesage)
+                let context = { errors, name, email, password, password2}
+                response.render('register', context)
+                }
+                else {
+                    const newUser = new User({
+                        name,
+                        email,
+                        password
+                    });
+
+                    //Hash User password
+                    bcrypt.genSalt(10, (error, salt) => {
+                        bcrypt.hash(newUser.password, salt, (err, hash) => {
+                            if (err) throw err;
+                            //Set User Password to hashed
+                            newUser.password = hash;
+                            // Save Insatnce of the User to Database
+                            newUser.save()
+                                .then(user => {
+                                    request.flash('success_msg', 'Congratulations, You are now Registered as User')
+                                    response.redirect('login')
+                                })
+                                .catch(error => console.log(error));
+                        })
+                    })
+                }
+        
+            })
+    }
 })
 
-router.get('/login', (request, response) => {
-    response.render('login');
-})
+
+// Login
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', {
+      successRedirect: '/logs/home',
+      failureRedirect: '/users/login',
+      failureFlash: true
+    })(req, res, next);
+  });
+  
+  // Logout
+  router.get('/logout', (request, response, next) => {
+    request.logout(function (error) {
+        if (error) { return next(error)}
+    });
+    request.flash('success_msg', 'You are logged out Successfully');
+    response.redirect('/users/login');
+  });
+  
+
+
+
+
+
 
 module.exports = router;

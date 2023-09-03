@@ -1,13 +1,8 @@
 const Log = require('../models/log');
 
-const createController =  (request, response) => {
-    Log.find()
-        .then((result) => {
-            response.render('new-log')
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+
+const landingPageController = (request, response) => {
+    response.render('landingPage')
 }
 
 const getallLogsController = (request, response) => {
@@ -29,6 +24,10 @@ const getAbsoluteLogsController = (request, response) => {
         .catch((error) => {
             console.log(error);
         })
+}
+
+const createController =  (request, response) => {
+    response.render('new-log')
 }
 
 const postAbsoluteLogsController = (request, response) => {
@@ -68,11 +67,14 @@ const deleteSingleItemLogController = (request, response) => {
 }
 
 
+
+
 module.exports = { 
     createController,
     getallLogsController,
     getAbsoluteLogsController,
     postAbsoluteLogsController,
     getSingleItemLogController,
-    deleteSingleItemLogController
+    deleteSingleItemLogController,
+    landingPageController,
   }
