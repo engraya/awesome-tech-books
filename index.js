@@ -2,25 +2,24 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const app = new express();
-const logRoutes = require('./routes/logRoutes');
-const userRoutes = require('./routes/users')
+const logRoutes = require('./routes/commentRoutes');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session')
 const passport = require('passport');
 const coreRoute = require('./routes/core');
-const usersRoute = require('./routes/users')
+const booksRoute = require('./routes/books');
+const commentRoute = require('./routes/commentRoutes')
+const tagsRoute = require('./routes/tags')
+const usersRoute = require('./routes/users');
 const bodyParser = require('body-parser');
+const Database = require('./Database');
+require('dotenv').config()
+Database()  
 
 
 // Passport Config
 require('./config/passport')(passport);
-
-// EJS
-app.set('view engine', 'ejs');
-
-app.use(express.static(path.join(__dirname,"public")));
-app.use(bodyParser.urlencoded({ extended : false }));
 
 
 // Express session
@@ -49,38 +48,30 @@ app.use(function(req, res, next) {
   });
 
 
-const dbURL = 'mongodb://localhost:27017/EventLoggerDatabase'
 
 
-mongoose.set('strictQuery', true);
-mongoose.connect(dbURL, { family : 4}, { useNewUrlParser: true, useUnifiedTopology: true  })
-    .then(() => console.log('MongoDB Connected...'))
-    .catch((err) => console.log(err));
-
-
-//check for DB Successful Connection
-// const db = mongoose.connection
-// db.once('open', _ => {
-//   console.log('Database connected:', dbURL)
-// })
-// db.on('error', err => {
-//   console.error('connection error:', err)
-// })
 
 // MiddleWARES
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.static('public'));
-app.use(express.urlencoded({ extended : true }));
+app.use(bodyParser.urlencoded({ extended : false}));
 
 //routes
-app.use('/logs', logRoutes);
-app.use('/users', userRoutes )
+app.use('/books', booksRoute);
+app.use('/comments', commentRoute);
+app.use('/users', usersRoute);
+app.use('/tags', tagsRoute);
+
 
 
 // Routes
 app.get('/', (request, response) => {
     response.render("landingPage")
+})
+
+app.get('/booksDashboard', (request, response) => {
+    response.render('booksDashboard')
 })
 
 

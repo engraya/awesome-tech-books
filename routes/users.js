@@ -90,7 +90,7 @@ router.post('/register', (request, response) =>{
 // Login
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', {
-      successRedirect: '/logs/home',
+      successRedirect: '/booksDashboard',
       failureRedirect: '/users/login',
       failureFlash: true
     })(req, res, next);
@@ -105,10 +105,6 @@ router.post('/login', (req, res, next) => {
     response.redirect('/users/login');
   });
   
-
-
-
-
 
 
 module.exports = router;
