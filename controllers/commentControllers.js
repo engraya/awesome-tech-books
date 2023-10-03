@@ -71,7 +71,7 @@ const deleteSingleItemCommentController = (request, response) => {
 
 module.exports = { 
     createController,
-    getallCommentController,
+    getallCommentsController,
     getAbsoluteCommentController,
     postAbsoluteCommentController,
     getSingleItemCommentController,

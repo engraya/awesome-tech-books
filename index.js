@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const app = new express();
 const logRoutes = require('./routes/commentRoutes');
 const expressValidator = require('express-validator');
+const expressEjsLayouts = require('express-ejs-layouts');
 const flash = require('connect-flash');
 const session = require('express-session')
 const passport = require('passport');
@@ -53,8 +54,9 @@ app.use(function(req, res, next) {
 
 // MiddleWARES
 app.set("views", path.join(__dirname, "views"));
+app.use(expressEjsLayouts);
 app.set("view engine", "ejs");
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname,"public")));
 app.use(bodyParser.urlencoded({ extended : false}));
 
 //routes

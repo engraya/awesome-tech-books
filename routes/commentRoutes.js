@@ -4,19 +4,17 @@ const commentController = require('../controllers/commentControllers');
 
 
 
-router.get('/home', commentController.getAbsoluteLogsController )
+router.get('/home', commentController.getAbsoluteCommentController )
 
-router.get('/all', commentController.getallLogsController)
-
+router.get('/all', commentController.getallCommentsController)
 
 router.get('/create', commentController.createController);
 
-router.post('/', commentController.postAbsoluteLogsController)
+router.post('/', commentController.postAbsoluteCommentController)
 
+router.get('/:id', commentController.getSingleItemCommentController )
 
-router.get('/:id', commentController.getSingleItemLogController )
-
-router.delete('/:id', commentController.deleteSingleItemLogController)
+router.delete('/:id', commentController.deleteSingleItemCommentController)
 
 
 

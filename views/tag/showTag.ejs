@@ -1,0 +1,8 @@
+<h2 class="page-header"><%= tag.name %></h2>
+<div class="btn-row">
+  <a class="btn btn-primary" href="/tags/<%= tag.id %>/edit">Edit Tag</a>
+</div>
+<% if (booksByTag.length > 0) { %>
+  <h2 class="page-header">Books By Tag</h2>
+  <%- include('../partials/bookGrid', { books: booksByAuthor }) %>
+<% } %>
